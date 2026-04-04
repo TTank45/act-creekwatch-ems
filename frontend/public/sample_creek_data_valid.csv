@@ -1,0 +1,5 @@
+siteName,latitude,longitude,date,time,pH,turbidity,dissolvedOxygen,temperature,eColi
+Yarralumla Creek,-35.3075,149.1015,2026-03-30,08:30,7.2,3.5,8.4,18.6,120
+Molonglo River,-35.321,149.083,2026-03-30,09:15,6.8,6.5,7.2,17.9,220
+Gungahlin Pond,-35.184,149.134,2026-03-30,10:00,7.5,2.1,9.0,20.1,90
+Tuggeranong Creek,-35.42,149.091,2026-03-30,11:00,6.4,9.5,5.8,20.2,350

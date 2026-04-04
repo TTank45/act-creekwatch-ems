@@ -1,0 +1,56 @@
+{
+  "creekHealthStatus": "Good",
+  "summary": {
+    "ph": 7.2,
+    "turbidity": 3.8,
+    "dissolvedOxygen": 8.4,
+    "temperature": 18.6,
+    "eColi": 110
+  },
+  "monitoringSites": [
+    {
+      "id": 1,
+      "name": "Molonglo River East",
+      "lat": -35.3075,
+      "lng": 149.1244,
+      "status": "Good"
+    },
+    {
+      "id": 2,
+      "name": "Sullivans Creek North",
+      "lat": -35.2785,
+      "lng": 149.1290,
+      "status": "Moderate"
+    },
+    {
+      "id": 3,
+      "name": "Jerrabomberra Creek South",
+      "lat": -35.3402,
+      "lng": 149.1493,
+      "status": "Poor"
+    }
+  ],
+  "historicalTrends": [
+    { "month": "Jan", "ph": 7.0, "turbidity": 4.5, "oxygen": 8.1 },
+    { "month": "Feb", "ph": 7.1, "turbidity": 4.2, "oxygen": 8.0 },
+    { "month": "Mar", "ph": 7.2, "turbidity": 3.9, "oxygen": 8.3 },
+    { "month": "Apr", "ph": 7.3, "turbidity": 3.7, "oxygen": 8.5 },
+    { "month": "May", "ph": 7.2, "turbidity": 3.8, "oxygen": 8.4 }
+  ],
+  "recentAlerts": [
+    {
+      "id": 1,
+      "title": "High Turbidity Detected",
+      "severity": "High",
+      "location": "Jerrabomberra Creek South",
+      "time": "Today at 5:20 AM"
+    },
+    {
+      "id": 2,
+      "title": "Low Dissolved Oxygen",
+      "severity": "Medium",
+      "location": "Sullivans Creek North",
+      "time": "Today at 5:17 AM"
+    }
+  ]
+}

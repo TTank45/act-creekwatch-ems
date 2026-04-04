@@ -1,0 +1,35 @@
+{
+  "name": "Benji",
+  "welcomeMessage": "Thank you for supporting ACT CreekWatch monitoring.",
+  "contributions": {
+    "totalUploads": 24,
+    "sitesVisited": 8,
+    "alertsSubmitted": 5,
+    "dataQualityScore": 94
+  },
+  "badges": [
+    "Creek Guardian",
+    "Clean Water Hero",
+    "Field Data Champion"
+  ],
+  "recentUploads": [
+    {
+      "id": 1,
+      "fileName": "molonglo-readings-mar.csv",
+      "status": "Validated",
+      "uploadedAt": "2026-03-30 10:10 AM"
+    },
+    {
+      "id": 2,
+      "fileName": "sullivans-creek-apr.csv",
+      "status": "Processing",
+      "uploadedAt": "2026-03-29 04:45 PM"
+    },
+    {
+      "id": 3,
+      "fileName": "jerrabomberra-weekly.csv",
+      "status": "Validated",
+      "uploadedAt": "2026-03-28 08:20 AM"
+    }
+  ]
+}
