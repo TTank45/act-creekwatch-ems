@@ -135,18 +135,22 @@ const uploadCsvFile = (req, res) => {
         }
 
         const uploads = readUploads();
+const users = ["Benji", "Rahool", "Tashi", "Kushal"];
 
-        const newUpload = {
-          id: getNextUploadId(uploads),
-          fileName: req.file.originalname,
-          status: "Validated",
-          uploadedAt: new Date().toLocaleString("en-AU", {
-            dateStyle: "medium",
-            timeStyle: "short",
-          }),
-          totalRows: rows.length,
-        };
+const randomUser = users[Math.floor(Math.random() * users.length)];
 
+const newUpload = {
+  id: uploads.length > 0 ? uploads[0].id + 1 : 1,
+  fileName: req.file.originalname,
+  status: "Validated",
+  uploadedAt: new Date().toLocaleString("en-AU", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }),
+  totalRows: rows.length,
+  user: randomUser, // NEW
+};
+        
         uploads.unshift(newUpload);
         writeUploads(uploads);
         writeLatestReadings(rows);

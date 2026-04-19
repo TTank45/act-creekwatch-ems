@@ -129,31 +129,7 @@ function PublicDashboardPage() {
             historical trends for monitored creek sites.
           </p>
         </div>
-
-        <div className="top-stats-grid">
-          <StatCard label="pH" value={displayedSummary.ph} />
-          <StatCard
-            label="Turbidity"
-            value={displayedSummary.turbidity}
-            unit="NTU"
-          />
-          <StatCard
-            label="Dissolved Oxygen"
-            value={displayedSummary.dissolvedOxygen}
-            unit="mg/L"
-          />
-          <StatCard
-            label="Temperature"
-            value={displayedSummary.temperature}
-            unit="°C"
-          />
-          <StatCard
-            label="E. coli"
-            value={displayedSummary.eColi}
-            unit="CFU/100mL"
-          />
-        </div>
-
+        
         <SectionCard title="Dashboard Filters">
           <div
             style={{
@@ -201,6 +177,31 @@ function PublicDashboardPage() {
           <SectionCard title="Creek Health Status">
             <StatusBadge status={dashboardData.creekHealthStatus || "Unknown"} />
           </SectionCard>
+
+        <div className="top-stats-grid">
+          <StatCard label="pH" value={displayedSummary.ph} />
+          <StatCard
+            label="Turbidity"
+            value={displayedSummary.turbidity}
+            unit="NTU"
+          />
+          <StatCard
+            label="Dissolved Oxygen"
+            value={displayedSummary.dissolvedOxygen}
+            unit="mg/L"
+          />
+          <StatCard
+            label="Temperature"
+            value={displayedSummary.temperature}
+            unit="°C"
+          />
+          <StatCard
+            label="E. coli"
+            value={displayedSummary.eColi}
+            unit="CFU/100mL"
+          />
+        </div>
+
 
           <SectionCard title="Monitoring Sites">
             {filteredMonitoringSites.length > 0 ? (

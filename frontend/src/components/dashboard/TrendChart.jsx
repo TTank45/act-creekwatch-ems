@@ -80,9 +80,32 @@ function TrendChart({ data }) {
           <Tooltip />
           <Legend />
 
-          <Line type="monotone" dataKey="ph" name="pH" strokeWidth={2} />
-          <Line type="monotone" dataKey="turbidity" name="Turbidity (NTU)" strokeWidth={2} />
-          <Line type="monotone" dataKey="oxygen" name="Dissolved Oxygen (mg/L)" strokeWidth={2} />
+          <Line
+  type="monotone"
+  dataKey="ph"
+  stroke="#2ecc71"
+  strokeWidth={2}
+  dot={{ r: 4 }}
+  activeDot={{ r: 6 }}
+/>
+
+<Line
+  type="monotone"
+  dataKey="turbidity"
+  stroke="#3498db"
+  strokeWidth={2}
+  dot={{ r: 4 }}
+  activeDot={{ r: 6 }}
+/>
+
+<Line
+  type="monotone"
+  dataKey="oxygen"
+  stroke="#e74c3c"
+  strokeWidth={2}
+  dot={{ r: 4 }}
+  activeDot={{ r: 6 }}
+/>
         </LineChart>
       </ResponsiveContainer>
 
