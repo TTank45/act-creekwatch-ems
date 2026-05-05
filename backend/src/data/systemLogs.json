@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1777969546808,
+    "message": "System restored to normal",
+    "time": "6:25:46 pm"
+  },
+  {
+    "id": 1777965414330,
+    "message": "Critical pollution event triggered",
+    "time": "5:16:54 pm"
+  },
+  {
+    "id": 1777965395072,
+    "message": "Simulator enabled",
+    "time": "5:16:35 pm"
+  },
+  {
+    "id": 1777965392735,
+    "message": "Simulator disabled",
+    "time": "5:16:32 pm"
+  },
+  {
+    "id": 1777965388660,
+    "message": "System restored to normal",
+    "time": "5:16:28 pm"
+  },
+  {
+    "id": 1777965384329,
+    "message": "Critical pollution event triggered",
+    "time": "5:16:24 pm"
+  }
+]

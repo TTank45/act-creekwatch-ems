@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef, } from "react";
 import { getPublicDashboardData } from "../services/dashboardService";
 import SectionCard from "../components/common/SectionCard";
 import StatusBadge from "../components/common/StatusBadge";
@@ -10,7 +10,8 @@ function PublicDashboardPage() {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [selectedSite, setSelectedSite] = useState("All Sites");
+  const [selectedSite, setSelectedSite] = useState("Yarralumla Creek");
+  const telemetryRef = useRef(null);
   const [selectedSeverity, setSelectedSeverity] = useState("All");
 
   useEffect(() => {
@@ -27,13 +28,28 @@ function PublicDashboardPage() {
     }
 
     fetchDashboard();
+    const interval = setInterval(() => {
+  fetchDashboard();
+}, 10000);
+
+return () => clearInterval(interval);
   }, []);
+  useEffect(() => {
+  if (telemetryRef.current) {
+    telemetryRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }
+}, [selectedSite]);
 
   const summary = dashboardData?.summary || {};
   const monitoringSites = dashboardData?.monitoringSites || [];
   const recentAlerts = dashboardData?.recentAlerts || [];
   const historicalTrends = dashboardData?.historicalTrends || [];
   const latestReadings = dashboardData?.latestReadings || [];
+  const simulationMode = dashboardData?.simulationMode;
+const simulatorEnabled = dashboardData?.simulatorEnabled;
 
   const siteOptions = useMemo(() => {
     return ["All Sites", ...monitoringSites.map((site) => site.name)];
@@ -86,11 +102,79 @@ function PublicDashboardPage() {
     };
   }, [selectedSite, summary, filteredReadings]);
 
+  const tableHeaderStyle = {
+  padding: "12px",
+  borderBottom: "2px solid #ddd",
+  textAlign: "left",
+};
+
+const tableCellStyle = {
+  
+  padding: "12px",
+  borderBottom: "1px solid #eee",
+};
+function getRowStatusColor(reading) {
+  const turbidity = Number(reading.turbidity);
+  const oxygen = Number(reading.dissolvedOxygen);
+  const eColi = Number(reading.eColi);
+  const ph = Number(reading.pH);
+
+  if (
+    turbidity > 8 ||
+    oxygen < 5 ||
+    eColi > 300 ||
+    ph < 6.5 ||
+    ph > 8.5
+  ) {
+    return "#ffebee";
+  }
+
+  if (
+    turbidity > 5 ||
+    oxygen < 7 ||
+    eColi > 150
+  ) {
+    return "#fff8e1";
+  }
+
+  return "#e8f5e9";
+}
+
   if (loading) {
     return (
       <section className="page">
         <div className="container">
           <h1>Public Dashboard</h1>
+          <div
+  style={{
+    marginTop: "1rem",
+    marginBottom: "1rem",
+    padding: "12px 18px",
+    borderRadius: "10px",
+    fontWeight: "bold",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "10px",
+
+    backgroundColor: !simulatorEnabled
+      ? "#eeeeee"
+      : simulationMode === "CRITICAL"
+      ? "#ffebee"
+      : "#e8f5e9",
+
+    color: !simulatorEnabled
+      ? "#616161"
+      : simulationMode === "CRITICAL"
+      ? "#c62828"
+      : "#2e7d32",
+  }}
+>
+  {!simulatorEnabled
+    ? "⚪ SIMULATOR DISABLED"
+    : simulationMode === "CRITICAL"
+    ? "🔴 CRITICAL EVENT ACTIVE"
+    : "🟢 SYSTEM NORMAL"}
+</div>
           <p>Loading dashboard data...</p>
         </div>
       </section>
@@ -124,6 +208,36 @@ function PublicDashboardPage() {
       <div className="container">
         <div className="page-heading">
           <h1>Public Dashboard</h1>
+          <div
+  style={{
+    marginTop: "1rem",
+    marginBottom: "1rem",
+    padding: "12px 18px",
+    borderRadius: "10px",
+    fontWeight: "bold",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "10px",
+
+    backgroundColor: !simulatorEnabled
+      ? "#eeeeee"
+      : simulationMode === "CRITICAL"
+      ? "#ffebee"
+      : "#e8f5e9",
+
+    color: !simulatorEnabled
+      ? "#616161"
+      : simulationMode === "CRITICAL"
+      ? "#c62828"
+      : "#2e7d32",
+  }}
+>
+  {!simulatorEnabled
+    ? "⚪ SIMULATOR DISABLED"
+    : simulationMode === "CRITICAL"
+    ? "🔴 CRITICAL EVENT ACTIVE"
+    : "🟢 SYSTEM NORMAL"}
+</div>
           <p>
             Live environmental status, current readings, recent alerts, and
             historical trends for monitored creek sites.
@@ -252,12 +366,127 @@ function PublicDashboardPage() {
             <CreekMap sites={filteredMonitoringSites} />
           </SectionCard>
         </div>
+        <SectionCard title="Live Sensor Telemetry">
+  {latestReadings.length > 0 ? (
+    <div style={{ overflowX: "auto" }}>
+      <table
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+        }}
+      >
+        <thead>
+          <tr
+            style={{
+              background: "#f4f4f4",
+            }}
+          >
+            <th style={tableHeaderStyle}>Site</th>
+            <th style={tableHeaderStyle}>pH</th>
+            <th style={tableHeaderStyle}>Turbidity</th>
+            <th style={tableHeaderStyle}>Oxygen</th>
+            <th style={tableHeaderStyle}>Temp</th>
+            <th style={tableHeaderStyle}>E. coli</th>
+            <th style={tableHeaderStyle}>Time</th>
+            <th style={tableHeaderStyle}>Sensor</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {latestReadings.map((reading, index) => (
+            <tr
+  key={index}
+  style={{
+    backgroundColor: getRowStatusColor(reading),
+    transition: "0.3s ease",
+  }}
+>
+              <td style={tableCellStyle}>
+                {reading.siteName}
+              </td>
+
+              <td style={tableCellStyle}>
+                {reading.pH}
+              </td>
+
+              <td style={tableCellStyle}>
+                {reading.turbidity} NTU
+              </td>
+
+              <td style={tableCellStyle}>
+                {reading.dissolvedOxygen} mg/L
+              </td>
+
+              <td style={tableCellStyle}>
+                {reading.temperature} °C
+              </td>
+
+              <td style={tableCellStyle}>
+                {reading.eColi}
+              </td>
+
+              <td style={tableCellStyle}>
+                {reading.time}
+              </td>
+
+            <td
+  style={{
+    ...tableCellStyle,
+    fontWeight: "bold",
+    color:
+      reading.sensorStatus === "OFFLINE"
+        ? "#c62828"
+        : "#2e7d32",
+  }}
+>
+  {reading.sensorStatus === "OFFLINE"
+    ? "OFFLINE"
+    : "ONLINE"}
+</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  ) : (
+    <p>No telemetry available.</p>
+  )}
+</SectionCard>
 
         <div className="chart-section">
-          <SectionCard title="Historical Trends">
+          <SectionCard
+  title={
+    selectedSite === "All Sites"
+      ? "Live Sensor Telemetry - All Sites"
+      : `Live Sensor Telemetry - ${selectedSite}`
+  }
+>
             {historicalTrends.length > 0 ? (
-              <TrendChart data={historicalTrends} />
-            ) : (
+  <div ref={telemetryRef}>
+    <h3
+      style={{
+        marginBottom: "1rem",
+        color: "#1565c0",
+      }}
+    >
+      Real-Time Telemetry Feed —
+      {selectedSite}
+    </h3>
+
+    <TrendChart
+      selectedSite={selectedSite}
+      data={
+        selectedSite === "All Sites"
+          ? historicalTrends
+          : historicalTrends.filter(
+              (entry) =>
+                entry.siteName ===
+                selectedSite
+            )
+      }
+    />
+  </div>
+) : (
               <p>No historical trend data available.</p>
             )}
           </SectionCard>

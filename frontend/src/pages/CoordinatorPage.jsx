@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { getPublicDashboardData } from "../services/dashboardService";
 import SectionCard from "../components/common/SectionCard";
 import StatusBadge from "../components/common/StatusBadge";
-
+import {
+  triggerPollutionSpike,
+  toggleSimulator,
+  restoreNormalConditions,
+} from "../services/dashboardService";
 function CoordinatorPage() {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -28,6 +32,12 @@ function CoordinatorPage() {
     }
 
     fetchData();
+    const interval = setInterval(() => {
+  fetchData();
+}, 10000);
+
+return () => clearInterval(interval);
+    
   }, []);
 
   function handleAddSite() {
@@ -58,12 +68,14 @@ function CoordinatorPage() {
       <section className="page">
         <div className="container">
           <h1>Coordinator Dashboard</h1>
+          
+
           <p>Loading data...</p>
         </div>
       </section>
     );
   }
-
+const systemLogs = dashboardData?.systemLogs || [];
   const allSites = [
     ...(dashboardData?.monitoringSites || []),
     ...customSites,
@@ -78,53 +90,118 @@ function CoordinatorPage() {
             Manage monitoring sites, view system-wide data, and oversee
             environmental conditions.
           </p>
+          <div
+  style={{
+    marginTop: "1rem",
+    display: "flex",
+    gap: "1rem",
+    flexWrap: "wrap",
+  }}
+>
+  <button
+    onClick={async () => {
+      try {
+        await triggerPollutionSpike();
+        alert("Critical pollution event triggered");
+      } catch (error) {
+        console.error(error);
+      }
+    }}
+    style={{
+      padding: "10px 16px",
+      background: "#c62828",
+      color: "white",
+      border: "none",
+      borderRadius: "6px",
+      cursor: "pointer",
+      fontWeight: "bold",
+    }}
+  >
+    Trigger Critical Event
+  </button>
+
+  <button
+    onClick={async () => {
+      try {
+        await restoreNormalConditions();
+        alert("System restored to normal");
+      } catch (error) {
+        console.error(error);
+      }
+    }}
+    style={{
+      padding: "10px 16px",
+      background: "#2e7d32",
+      color: "white",
+      border: "none",
+      borderRadius: "6px",
+      cursor: "pointer",
+      fontWeight: "bold",
+    }}
+  >
+    Restore Normal
+  </button>
+
+  <button
+    onClick={async () => {
+      try {
+        await toggleSimulator(false);
+        alert("Simulator disabled");
+      } catch (error) {
+        console.error(error);
+      }
+    }}
+    style={{
+      padding: "10px 16px",
+      background: "#616161",
+      color: "white",
+      border: "none",
+      borderRadius: "6px",
+      cursor: "pointer",
+      fontWeight: "bold",
+    }}
+  >
+    Disable Simulator
+  </button>
+
+  <button
+    onClick={async () => {
+      try {
+        await toggleSimulator(true);
+        alert("Simulator enabled");
+      } catch (error) {
+        console.error(error);
+      }
+    }}
+    style={{
+      padding: "10px 16px",
+      background: "#1565c0",
+      color: "white",
+      border: "none",
+      borderRadius: "6px",
+      cursor: "pointer",
+      fontWeight: "bold",
+    }}
+  >
+    Enable Simulator
+  </button>
+</div>
         </div>
-
-        {/* 🔥 ADD SITE FORM */}
-        <SectionCard title="Add New Monitoring Site">
-          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-            <input
-              type="text"
-              placeholder="Site Name"
-              value={newSite.name}
-              onChange={(e) =>
-                setNewSite({ ...newSite, name: e.target.value })
-              }
-            />
-
-            <input
-              type="text"
-              placeholder="Latitude"
-              value={newSite.lat}
-              onChange={(e) =>
-                setNewSite({ ...newSite, lat: e.target.value })
-              }
-            />
-
-            <input
-              type="text"
-              placeholder="Longitude"
-              value={newSite.lng}
-              onChange={(e) =>
-                setNewSite({ ...newSite, lng: e.target.value })
-              }
-            />
-
-            <button onClick={handleAddSite}>Add Site</button>
-          </div>
-        </SectionCard>
+<SectionCard title="Live System Activity">
+  {systemLogs.length > 0 ? (
+    <ul className="data-list">
+      {systemLogs.map((log) => (
+        <li key={log.id}>
+          <strong>{log.time}</strong> — {log.message}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p>No recent system activity.</p>
+  )}
+</SectionCard>
 
         {/*  MONITORING SITES */}
-        <SectionCard title="Monitoring Sites">
-          <ul className="data-list">
-            {allSites.map((site) => (
-              <li key={site.id}>
-                <strong>{site.name}</strong> —{" "}
-                <StatusBadge status={site.status || "Good"} />
-              </li>
-            ))}
-          </ul>
-        </SectionCard>
       </div>
     </section>
   );

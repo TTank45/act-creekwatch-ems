@@ -9,3 +9,50 @@ export async function getPublicDashboardData() {
 
   return response.json();
 }
+export async function triggerPollutionSpike() {
+  const response = await fetch(
+    `${API_BASE_URL}/simulator/pollution-spike`,
+    {
+      method: "POST",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to trigger pollution spike");
+  }
+
+  return response.json();
+}
+export async function toggleSimulator(enabled) {
+  const response = await fetch(
+    `${API_BASE_URL}/simulator/toggle`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ enabled }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to toggle simulator");
+  }
+
+  return response.json();
+}
+
+export async function restoreNormalConditions() {
+  const response = await fetch(
+    `${API_BASE_URL}/simulator/restore-normal`,
+    {
+      method: "POST",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to restore conditions");
+  }
+
+  return response.json();
+}

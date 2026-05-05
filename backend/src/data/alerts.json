@@ -1,14 +1,1 @@
-[
-  {
-    "id": 1,
-    "title": "Abnormal pH",
-    "severity": "Moderate",
-    "parameter": "pH",
-    "value": 6.4,
-    "unit": "",
-    "location": "Yarralumla Creek",
-    "time": "2026-03-30 08:30",
-    "description": "Reading recorded at Yarralumla Creek triggered an environmental alert based on threshold rules.",
-    "status": "Open"
-  }
-]
+[]

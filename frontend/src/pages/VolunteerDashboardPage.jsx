@@ -24,6 +24,11 @@ function VolunteerDashboardPage() {
     }
 
     fetchVolunteerData();
+    const interval = setInterval(() => {
+  fetchVolunteerData();
+}, 10000);
+
+return () => clearInterval(interval);
   }, []);
 
   if (loading) {

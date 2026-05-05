@@ -1,11 +1,20 @@
 const fs = require("fs");
 const path = require("path");
 
+const systemLogsFilePath = path.join(
+  __dirname,
+  "../data/systemLogs.json"
+);
+
 const latestReadingsFilePath = path.join(
   __dirname,
   "../data/latestReadings.json"
 );
 const alertsFilePath = path.join(__dirname, "../data/alerts.json");
+const telemetryHistoryFilePath = path.join(
+  __dirname,
+  "../data/telemetryHistory.json"
+);
 
 function readJsonFile(filePath, fallback = []) {
   try {
@@ -93,7 +102,17 @@ function buildHistoricalTrends(rows) {
       oxygen: Number((values.oxygenTotal / values.count).toFixed(2)),
     }));
 }
+function buildTelemetryTrends() {
+  const history = readJsonFile(telemetryHistoryFilePath, []);
 
+  return history.slice(-30).map((entry) => ({
+    date: entry.timestamp,
+    ph: entry.ph,
+    turbidity: entry.turbidity,
+    oxygen: entry.oxygen,
+    siteName: entry.siteName,
+  }));
+}
 const getPublicDashboard = (req, res) => {
   const rows = readLatestReadings();
   const alerts = readAlerts();
@@ -129,6 +148,10 @@ const getPublicDashboard = (req, res) => {
   }
 
   res.json({
+    simulationMode: 
+    require("../services/iotSimulator").getSimulationMode(),
+    simulatorEnabled:
+  require("../services/iotSimulator").getSimulatorEnabled(),
   creekHealthStatus,
   summary: {
     ph: avgPh,
@@ -138,9 +161,11 @@ const getPublicDashboard = (req, res) => {
     eColi: avgEColi,
   },
   monitoringSites: buildMonitoringSites(rows),
-  historicalTrends: buildHistoricalTrends(rows),
+  historicalTrends: buildTelemetryTrends(),
   recentAlerts: alerts.slice(0, 5),
   latestReadings: rows,
+
+  systemLogs: readJsonFile(systemLogsFilePath, []),
 });
 };
 
